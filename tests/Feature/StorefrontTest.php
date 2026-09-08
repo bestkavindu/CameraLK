@@ -285,6 +285,13 @@ test('the filters survive a page load from the query string', function () {
 
     $this->get(route('store.products', ['category' => 'drones', 'brand' => 'dji', 'sort' => 'price-asc']))
         ->assertOk()
+        ->assertSee('Mini 4 Pro');
+
+    // Scoped to the component rather than the whole page: the navbar's "new in
+    // stock" preview lists the newest products site-wide, so a page-level
+    // assertDontSee would match that instead of the grid it means to check.
+    Livewire::withQueryParams(['category' => 'drones', 'brand' => 'dji', 'sort' => 'price-asc'])
+        ->test('pages::store.products')
         ->assertSee('Mini 4 Pro')
         ->assertDontSee('Alpha 7 IV');
 });

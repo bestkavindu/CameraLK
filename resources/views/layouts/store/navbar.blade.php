@@ -4,15 +4,45 @@
         ->orderBy('name')
         ->get();
 
+    $productCount = \App\Models\Product::query()->count();
+
+    /**
+     * Newest arrivals previewed under All Gear. There is no product detail
+     * route, so each row deep-links into the grid's own search filter, which
+     * matches on products.name.
+     */
+    $featured = \App\Models\Product::query()
+        ->with(['brand:id,name', 'subCategory:id,name', 'images'])
+        ->latest()
+        ->take(6)
+        ->get()
+        ->map(function (\App\Models\Product $product): array {
+            $price = (float) $product->effectivePrice();
+            $off = $product->discountPercentage();
+
+            return [
+                'id' => $product->id,
+                'eyebrow' => $product->brand?->name ?? $product->subCategory->name,
+                'name' => $product->name,
+                'alt' => trim(($product->brand?->name ?? '').' '.$product->name),
+                'image' => $product->primaryImage()?->imageUrl(),
+                'price' => 'Rs '.number_format($price, fmod($price, 1.0) === 0.0 ? 0 : 2),
+                'off' => $off !== null && $off > 0 ? '-'.$off.'%' : null,
+                'href' => route('store.products', ['q' => $product->name]),
+            ];
+        });
+
+    $gearActive = request()->routeIs('store.products') && ! request()->has('category');
+
     $links = [
         ['label' => __('Home'), 'href' => route('home'), 'active' => request()->routeIs('home')],
-        ['label' => __('All Gear'), 'href' => route('store.products'), 'active' => request()->routeIs('store.products') && ! request()->has('category')],
     ];
 @endphp
 
 <header
     x-data="{
         categoryOpen: false,
+        gearOpen: false,
         mobileOpen: false,
         scrolled: false,
         init() {
@@ -79,6 +109,128 @@
                         {{ $link['label'] }}
                     </a>
                 @endforeach
+
+                {{-- All Gear. Stays a plain link to the grid; the flyout is a
+                     preview of what is newest, opened on hover. --}}
+                <div
+                    class="relative"
+                    @mouseenter="gearOpen = true"
+                    @mouseleave="gearOpen = false"
+                >
+                    <a
+                        href="{{ route('store.products') }}"
+                        wire:navigate
+                        @class([
+                            'inline-flex h-[38px] items-center gap-[7px] rounded-full no-underline',
+                            'bg-store-ink px-[19px] font-semibold text-white transition-transform duration-[400ms] ease-[cubic-bezier(0.32,0.72,0,1)] hover:scale-[1.03]' => $gearActive,
+                            'px-[15px] text-store-ink-soft transition-colors duration-200 hover:bg-[rgba(20,24,29,0.06)] hover:text-store-ink' => ! $gearActive,
+                        ])
+                    >
+                        <span>{{ __('All Gear') }}</span>
+                        @if ($featured->isNotEmpty())
+                            <svg
+                                width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"
+                                class="transition-transform duration-200"
+                                :class="gearOpen ? 'rotate-180 text-store-flame' : ''"
+                            >
+                                <path d="M5 9l7 7 7-7"/>
+                            </svg>
+                        @endif
+                    </a>
+
+                    @if ($featured->isNotEmpty())
+                        <div
+                            x-show="gearOpen"
+                            x-cloak
+                            x-transition:enter="transition ease-out duration-200"
+                            x-transition:enter-start="opacity-0 -translate-y-1 scale-[0.98]"
+                            x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                            x-transition:leave="transition ease-in duration-150"
+                            x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+                            x-transition:leave-end="opacity-0 -translate-y-1 scale-[0.98]"
+                            class="absolute left-0 top-full z-50 mt-3 w-[620px] rounded-3xl border border-[rgba(20,24,29,0.07)] bg-white p-4 shadow-[0_30px_70px_-20px_rgba(0,0,0,0.45)]"
+                        >
+                            <div class="mb-3 flex items-center justify-between border-b border-[rgba(20,24,29,0.07)] px-2 pb-2.5">
+                                <div class="flex items-center gap-2">
+                                    <span class="size-1.5 rounded-full bg-store-flame"></span>
+                                    <span class="text-[10.5px] font-bold uppercase tracking-[0.14em] text-store-ink">
+                                        {{ __('New in stock') }}
+                                    </span>
+                                </div>
+                                <a
+                                    href="{{ route('store.products') }}"
+                                    wire:navigate
+                                    class="text-[11px] font-semibold text-store-flame no-underline hover:underline"
+                                >
+                                    {{ trans_choice('View all :count product|View all :count products', $productCount, ['count' => $productCount]) }} &rarr;
+                                </a>
+                            </div>
+
+                            <div class="grid grid-cols-3 gap-1">
+                                @foreach ($featured as $item)
+                                    <a
+                                        href="{{ $item['href'] }}"
+                                        wire:navigate
+                                        class="group flex flex-col gap-1.5 rounded-2xl p-2 no-underline transition-colors duration-150 hover:bg-store-chalk"
+                                    >
+                                        <span class="relative block aspect-[4/3] overflow-hidden rounded-xl bg-store-wash">
+                                            @if ($item['image'])
+                                                <img
+                                                    src="{{ $item['image'] }}"
+                                                    alt="{{ $item['alt'] }}"
+                                                    loading="lazy"
+                                                    class="absolute inset-0 size-full object-cover transition-transform duration-300 group-hover:scale-105"
+                                                />
+                                            @else
+                                                <span class="absolute inset-0 flex items-center justify-center p-2 text-center text-[10px] font-medium text-store-faint">
+                                                    {{ $item['alt'] }}
+                                                </span>
+                                            @endif
+
+                                            @if ($item['off'])
+                                                <span class="absolute left-1.5 top-1.5 rounded-md bg-store-flame px-1.5 py-0.5 text-[9.5px] font-bold text-white">
+                                                    {{ $item['off'] }}
+                                                </span>
+                                            @endif
+                                        </span>
+
+                                        <span class="truncate text-[9.5px] uppercase tracking-[0.12em] text-store-faint">
+                                            {{ $item['eyebrow'] }}
+                                        </span>
+                                        <span class="line-clamp-2 text-[12px] font-semibold leading-[1.35] text-store-ink group-hover:text-store-flame">
+                                            {{ $item['name'] }}
+                                        </span>
+                                        <span class="text-[12px] font-bold text-store-ink">
+                                            {{ $item['price'] }}
+                                        </span>
+                                    </a>
+                                @endforeach
+                            </div>
+
+                            <div class="mt-3 flex items-center justify-between gap-3 rounded-2xl bg-store-chalk px-3 py-2.5">
+                                <span class="text-[11px] text-store-slate">{{ __('Jump straight to') }}</span>
+                                <span class="flex items-center gap-3">
+                                    <a
+                                        href="{{ route('store.products', ['sort' => 'discount']) }}"
+                                        wire:navigate
+                                        class="text-[11px] font-semibold text-store-ink no-underline hover:text-store-flame"
+                                    >
+                                        {{ __('Biggest discount') }}
+                                    </a>
+                                    <span class="h-3 w-px bg-[rgba(20,24,29,0.12)]"></span>
+                                    <a
+                                        href="{{ route('store.products', ['sort' => 'price-asc']) }}"
+                                        wire:navigate
+                                        class="text-[11px] font-semibold text-store-ink no-underline hover:text-store-flame"
+                                    >
+                                        {{ __('Lowest price') }}
+                                    </a>
+                                </span>
+                            </div>
+                        </div>
+                    @endif
+                </div>
 
                 {{-- Categories flyout --}}
                 <div
@@ -372,6 +524,26 @@
                     href="{{ route('store.products') }}"
                     wire:navigate
                     @click="mobileOpen = false"
+                    @class([
+                        'flex items-center justify-between rounded-2xl px-3 py-2.5 text-sm font-semibold no-underline',
+                        'bg-store-ink text-white' => $gearActive,
+                        'text-store-ink hover:bg-store-chalk' => ! $gearActive,
+                    ])
+                >
+                    <span>{{ __('All Gear') }}</span>
+                    <span @class([
+                        'rounded-full px-2 py-0.5 text-[10px] font-semibold',
+                        'bg-white/15 text-white' => $gearActive,
+                        'bg-store-chalk text-store-slate' => ! $gearActive,
+                    ])>
+                        {{ $productCount }}
+                    </span>
+                </a>
+
+                <a
+                    href="{{ route('store.products') }}"
+                    wire:navigate
+                    @click="mobileOpen = false"
                     class="flex items-center justify-between rounded-2xl px-3 py-2.5 text-sm font-semibold text-store-ink no-underline hover:bg-store-chalk"
                 >
                     <span class="inline-flex items-center gap-2">
@@ -413,6 +585,54 @@
                     @endforelse
                 </div>
             </div>
+
+            @if ($featured->isNotEmpty())
+                <div class="border-t border-[rgba(20,24,29,0.07)] py-3">
+                    <div class="mb-2 flex items-center justify-between px-3">
+                        <span class="text-[10.5px] font-bold uppercase tracking-[0.14em] text-store-faint">
+                            {{ __('New in stock') }}
+                        </span>
+                        <a
+                            href="{{ route('store.products') }}"
+                            wire:navigate
+                            @click="mobileOpen = false"
+                            class="text-[11px] font-semibold text-store-flame no-underline"
+                        >
+                            {{ __('View all') }} &rarr;
+                        </a>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2">
+                        @foreach ($featured->take(4) as $item)
+                            <a
+                                href="{{ $item['href'] }}"
+                                wire:navigate
+                                @click="mobileOpen = false"
+                                class="flex items-center gap-2.5 rounded-2xl bg-store-chalk p-2 no-underline transition-colors hover:bg-store-wash"
+                            >
+                                <span class="relative block size-11 shrink-0 overflow-hidden rounded-xl bg-store-wash">
+                                    @if ($item['image'])
+                                        <img
+                                            src="{{ $item['image'] }}"
+                                            alt="{{ $item['alt'] }}"
+                                            loading="lazy"
+                                            class="absolute inset-0 size-full object-cover"
+                                        />
+                                    @endif
+                                </span>
+                                <span class="min-w-0 flex-1">
+                                    <span class="block truncate text-[11.5px] font-semibold text-store-ink">
+                                        {{ $item['name'] }}
+                                    </span>
+                                    <span class="block text-[11px] font-bold text-store-flame">
+                                        {{ $item['price'] }}
+                                    </span>
+                                </span>
+                            </a>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
 
             <div class="mt-2 flex items-center justify-between gap-3 rounded-2xl bg-store-chalk p-3 text-xs text-store-slate">
                 <span class="inline-flex items-center gap-1.5">
