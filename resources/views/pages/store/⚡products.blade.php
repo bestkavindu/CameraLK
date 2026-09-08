@@ -342,8 +342,8 @@ new #[Layout('layouts::store')] #[Title('Products')] class extends Component {
         </p>
     </div>
 
-    <section class="sticky top-0 z-20 mb-2 bg-store-surface pb-3.5 pt-3">
-        <div class="rounded-[14px] border border-store-line bg-white p-3.5 shadow-[0_1px_2px_rgba(20,24,29,0.04)]">
+    <section class="sticky top-[64px] sm:top-[72px] z-20 mb-2 bg-store-surface/90 backdrop-blur-md pb-3.5 pt-3 transition-all">
+        <div class="rounded-[14px] border border-store-line bg-white/95 p-3.5 shadow-[0_1px_2px_rgba(20,24,29,0.04)]">
 
             <div class="flex flex-wrap items-center gap-3">
                 <div class="relative min-w-[200px] flex-[1_1_260px]">
