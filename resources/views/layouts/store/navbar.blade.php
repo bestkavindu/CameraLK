@@ -49,14 +49,6 @@
             window.addEventListener('scroll', () => {
                 this.scrolled = window.scrollY > 20;
             }, { passive: true });
-
-            window.addEventListener('keydown', (e) => {
-                if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-                    e.preventDefault();
-                    const input = document.getElementById('navbar-quick-search');
-                    if (input) input.focus();
-                }
-            });
         }
     }"
     class="pointer-events-none fixed inset-x-0 top-0 z-40 px-3 pt-[18px] sm:px-[clamp(16px,3vw,44px)]"
@@ -73,37 +65,21 @@
             <a
                 href="{{ route('home') }}"
                 wire:navigate
-                class="group flex shrink-0 items-center gap-[11px] text-store-ink no-underline"
+                class="group mr-auto flex shrink-0 items-center text-store-ink no-underline"
             >
-                {{-- Reticle badge --}}
-                <span class="grid size-[34px] shrink-0 place-items-center rounded-xl sm:size-[38px] bg-[linear-gradient(155deg,#FF8A55,#E4572E)] shadow-[0_6px_14px_-4px_rgba(228,87,46,0.6),inset_0_1px_0_rgba(255,255,255,0.45)] transition-transform duration-300 group-hover:scale-105">
-                    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.7" stroke-linecap="round" class="transition-transform duration-500 group-hover:rotate-45">
-                        <circle cx="12" cy="12" r="9"/>
-                        <path d="M12 3v7M21 12h-7M12 21v-7M3 12h7"/>
-                    </svg>
-                </span>
-
-                <span class="hidden flex-col gap-0.5 min-[360px]:flex">
-                    <span class="text-[16px] font-bold leading-none tracking-[-0.015em] sm:text-[18px]">
-                        SHUTTER<span class="text-store-flame">&amp;</span>SKY
-                    </span>
-                    <span class="hidden items-center gap-[5px] text-[9.5px] font-semibold uppercase tracking-[0.14em] text-store-slate sm:inline-flex">
-                        <span class="size-1.5 rounded-full bg-store-go"></span>
-                        <span>{{ __('Colombo hub') }}</span>
-                    </span>
-                </span>
+                <x-store.logo class="h-[36px] w-auto shrink-0 object-contain object-left text-[15px] transition-transform duration-300 group-hover:scale-[1.04] sm:h-[44px] sm:text-[17px]" />
             </a>
 
             {{-- Primary navigation --}}
-            <nav class="hidden items-center gap-1 text-[14px] font-medium text-store-ink-soft min-[1000px]:flex">
+            <nav class="hidden items-center gap-1 text-[15.5px] font-medium text-store-ink-soft min-[1000px]:flex">
                 @foreach ($links as $link)
                     <a
                         href="{{ $link['href'] }}"
                         wire:navigate
                         @class([
-                            'inline-flex h-[38px] items-center rounded-full no-underline',
-                            'bg-store-ink px-[19px] font-semibold text-white transition-transform duration-[400ms] ease-[cubic-bezier(0.32,0.72,0,1)] hover:scale-[1.03]' => $link['active'],
-                            'px-[15px] text-store-ink-soft transition-colors duration-200 hover:bg-[rgba(20,24,29,0.06)] hover:text-store-ink' => ! $link['active'],
+                            'inline-flex h-[42px] items-center rounded-full no-underline',
+                            'bg-store-ink px-[21px] font-semibold text-white transition-transform duration-[400ms] ease-[cubic-bezier(0.32,0.72,0,1)] hover:scale-[1.03]' => $link['active'],
+                            'px-[17px] text-store-ink-soft transition-colors duration-200 hover:bg-[rgba(20,24,29,0.06)] hover:text-store-ink' => ! $link['active'],
                         ])
                     >
                         {{ $link['label'] }}
@@ -121,9 +97,9 @@
                         href="{{ route('store.products') }}"
                         wire:navigate
                         @class([
-                            'inline-flex h-[38px] items-center gap-[7px] rounded-full no-underline',
-                            'bg-store-ink px-[19px] font-semibold text-white transition-transform duration-[400ms] ease-[cubic-bezier(0.32,0.72,0,1)] hover:scale-[1.03]' => $gearActive,
-                            'px-[15px] text-store-ink-soft transition-colors duration-200 hover:bg-[rgba(20,24,29,0.06)] hover:text-store-ink' => ! $gearActive,
+                            'inline-flex h-[42px] items-center gap-[7px] rounded-full no-underline',
+                            'bg-store-ink px-[21px] font-semibold text-white transition-transform duration-[400ms] ease-[cubic-bezier(0.32,0.72,0,1)] hover:scale-[1.03]' => $gearActive,
+                            'px-[17px] text-store-ink-soft transition-colors duration-200 hover:bg-[rgba(20,24,29,0.06)] hover:text-store-ink' => ! $gearActive,
                         ])
                     >
                         <span>{{ __('All Gear') }}</span>
@@ -149,7 +125,7 @@
                             x-transition:leave="transition ease-in duration-150"
                             x-transition:leave-start="opacity-100 translate-y-0 scale-100"
                             x-transition:leave-end="opacity-0 -translate-y-1 scale-[0.98]"
-                            class="absolute left-0 top-full z-50 mt-3 w-[620px] rounded-3xl border border-[rgba(20,24,29,0.07)] bg-white p-4 shadow-[0_30px_70px_-20px_rgba(0,0,0,0.45)]"
+                            class="absolute right-0 top-full z-50 mt-3 w-[620px] rounded-3xl border border-[rgba(20,24,29,0.07)] bg-white p-4 shadow-[0_30px_70px_-20px_rgba(0,0,0,0.45)]"
                         >
                             <div class="mb-3 flex items-center justify-between border-b border-[rgba(20,24,29,0.07)] px-2 pb-2.5">
                                 <div class="flex items-center gap-2">
@@ -242,7 +218,7 @@
                         type="button"
                         @click="categoryOpen = ! categoryOpen"
                         :class="categoryOpen ? 'bg-[rgba(20,24,29,0.06)] text-store-ink' : 'text-store-ink-soft'"
-                        class="inline-flex h-[38px] cursor-pointer items-center gap-[7px] rounded-full px-[15px] transition-colors duration-200 hover:bg-[rgba(20,24,29,0.06)] hover:text-store-ink"
+                        class="inline-flex h-[42px] cursor-pointer items-center gap-[7px] rounded-full px-[17px] transition-colors duration-200 hover:bg-[rgba(20,24,29,0.06)] hover:text-store-ink"
                         :aria-expanded="categoryOpen.toString()"
                     >
                         <span>{{ __('Categories') }}</span>
@@ -265,7 +241,7 @@
                         x-transition:leave="transition ease-in duration-150"
                         x-transition:leave-start="opacity-100 translate-y-0 scale-100"
                         x-transition:leave-end="opacity-0 -translate-y-1 scale-[0.98]"
-                        class="absolute left-1/2 top-full z-50 mt-3 w-[560px] -translate-x-1/2 rounded-3xl border border-[rgba(20,24,29,0.07)] bg-white p-4 shadow-[0_30px_70px_-20px_rgba(0,0,0,0.45)]"
+                        class="absolute right-0 top-full z-50 mt-3 w-[560px] rounded-3xl border border-[rgba(20,24,29,0.07)] bg-white p-4 shadow-[0_30px_70px_-20px_rgba(0,0,0,0.45)]"
                     >
                         <div class="mb-3 flex items-center justify-between border-b border-[rgba(20,24,29,0.07)] px-2 pb-2.5">
                             <div class="flex items-center gap-2">
@@ -373,63 +349,13 @@
                         </div>
                     </div>
                 </div>
-
-                {{-- Deals --}}
-                <a
-                    href="{{ route('store.products') }}"
-                    wire:navigate
-                    class="inline-flex h-[38px] items-center gap-2 rounded-full px-3.5 font-semibold text-store-ink no-underline transition-colors duration-200 hover:bg-[rgba(228,87,46,0.09)]"
-                >
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="#E4572E">
-                        <path d="M13 2s1 3.2-1.6 6C9 10.5 7 12.2 7 15a5 5 0 0 0 10 0c0-2-1-3.4-1-3.4s2.5 1.2 2.5 4.4A7.5 7.5 0 1 1 13 2z"/>
-                    </svg>
-                    <span>{{ __('Deals') }}</span>
-                    <span class="rounded-md bg-store-hot-wash px-[7px] py-0.5 text-[9.5px] font-bold tracking-[0.1em] text-store-hot-ink">
-                        {{ __('HOT') }}
-                    </span>
-                </a>
             </nav>
 
             {{-- Tools --}}
-            <div class="ml-auto flex min-w-0 shrink items-center gap-2.5">
-                {{-- Quick search --}}
-                <form
-                    action="{{ route('store.products') }}"
-                    method="GET"
-                    class="hidden min-w-0 shrink basis-[260px] max-[1240px]:basis-[200px] min-[1000px]:block"
-                >
-                    <label class="flex h-10 min-w-0 items-center gap-[9px] rounded-full border border-[rgba(20,24,29,0.08)] bg-store-chalk pr-2 pl-3.5 transition-colors duration-200 focus-within:border-store-flame focus-within:bg-white">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#8B949E" stroke-width="2.2" stroke-linecap="round" class="shrink-0">
-                            <circle cx="11" cy="11" r="7"/>
-                            <path d="M20 20l-3.5-3.5"/>
-                        </svg>
-                        <input
-                            id="navbar-quick-search"
-                            type="search"
-                            name="q"
-                            placeholder="{{ __('Search cameras, lenses, drones') }}"
-                            class="min-w-0 flex-1 border-0 bg-transparent text-[13.5px] text-store-ink placeholder:text-store-faint focus:outline-none [&::-webkit-search-cancel-button]:hidden"
-                        />
-                        <kbd class="pointer-events-none shrink-0 rounded-md border border-[rgba(20,24,29,0.10)] bg-white px-[7px] py-[3px] font-sans text-[10.5px] font-semibold text-store-slate">
-                            &#8984;K
-                        </kbd>
-                    </label>
-                </form>
-
-                {{-- WhatsApp support --}}
-                <a
-                    href="https://wa.me/94770000000"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    title="{{ __('WhatsApp Direct Support') }}"
-                    class="hidden h-10 shrink-0 items-center gap-2 rounded-full border border-[rgba(20,24,29,0.10)] bg-white px-4 text-[13.5px] font-semibold text-store-ink no-underline transition-colors duration-200 hover:border-store-ink min-[1120px]:inline-flex"
-                >
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#E4572E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .3 1.9.6 2.8a2 2 0 0 1-.5 2.1L8.1 9.7a16 16 0 0 0 6 6l1.1-1.1a2 2 0 0 1 2.1-.5c.9.3 1.8.5 2.8.6a2 2 0 0 1 1.9 2.2z"/>
-                    </svg>
-                    <span>{{ __('Support') }}</span>
-                </a>
-
+            <div @class([
+                'flex min-w-0 shrink items-center gap-2.5',
+                'min-[1000px]:hidden' => auth()->guest(),
+            ])>
                 {{-- Auth --}}
                 @auth
                     <a
@@ -441,18 +367,6 @@
                             {{ strtoupper(substr(auth()->user()->name ?? 'U', 0, 1)) }}
                         </span>
                         <span class="hidden sm:inline">{{ __('Dashboard') }}</span>
-                    </a>
-                @else
-                    <a
-                        href="{{ route('login') }}"
-                        wire:navigate
-                        class="inline-flex h-10 shrink-0 items-center gap-2 rounded-full border border-[rgba(20,24,29,0.10)] bg-white px-3 text-[13.5px] font-semibold text-store-ink no-underline sm:px-[17px] transition-[background-color,border-color,color,transform] duration-[260ms] ease-[cubic-bezier(0.32,0.72,0,1)] hover:scale-[1.03] hover:border-store-ink hover:bg-store-ink hover:text-white"
-                    >
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-                            <circle cx="12" cy="8" r="3.6"/>
-                            <path d="M4.5 20a7.5 7.5 0 0 1 15 0"/>
-                        </svg>
-                        <span class="hidden sm:inline">{{ __('Sign in') }}</span>
                     </a>
                 @endauth
 
@@ -486,21 +400,6 @@
             x-transition:leave-end="opacity-0 -translate-y-3 scale-[0.98]"
             class="mt-2.5 max-h-[calc(100svh-110px)] overflow-y-auto rounded-3xl border border-[rgba(20,24,29,0.07)] bg-white p-4 shadow-[0_30px_70px_-20px_rgba(0,0,0,0.45)] min-[1000px]:hidden"
         >
-            <form action="{{ route('store.products') }}" method="GET" class="mb-3">
-                <label class="flex h-11 items-center gap-2.5 rounded-2xl border border-[rgba(20,24,29,0.08)] bg-store-chalk px-3.5 focus-within:border-store-flame focus-within:bg-white">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8B949E" stroke-width="2.2" stroke-linecap="round" class="shrink-0">
-                        <circle cx="11" cy="11" r="7"/>
-                        <path d="M20 20l-3.5-3.5"/>
-                    </svg>
-                    <input
-                        type="search"
-                        name="q"
-                        placeholder="{{ __('Search cameras, lenses, drones') }}"
-                        class="min-w-0 flex-1 border-0 bg-transparent text-sm text-store-ink placeholder:text-store-faint focus:outline-none"
-                    />
-                </label>
-            </form>
-
             <div class="space-y-1 border-b border-[rgba(20,24,29,0.07)] pb-3">
                 @foreach ($links as $link)
                     <a
@@ -537,23 +436,6 @@
                         'bg-store-chalk text-store-slate' => ! $gearActive,
                     ])>
                         {{ $productCount }}
-                    </span>
-                </a>
-
-                <a
-                    href="{{ route('store.products') }}"
-                    wire:navigate
-                    @click="mobileOpen = false"
-                    class="flex items-center justify-between rounded-2xl px-3 py-2.5 text-sm font-semibold text-store-ink no-underline hover:bg-store-chalk"
-                >
-                    <span class="inline-flex items-center gap-2">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="#E4572E">
-                            <path d="M13 2s1 3.2-1.6 6C9 10.5 7 12.2 7 15a5 5 0 0 0 10 0c0-2-1-3.4-1-3.4s2.5 1.2 2.5 4.4A7.5 7.5 0 1 1 13 2z"/>
-                        </svg>
-                        <span>{{ __('Deals') }}</span>
-                    </span>
-                    <span class="rounded-md bg-store-hot-wash px-[7px] py-0.5 text-[9.5px] font-bold tracking-[0.1em] text-store-hot-ink">
-                        {{ __('HOT') }}
                     </span>
                 </a>
             </div>

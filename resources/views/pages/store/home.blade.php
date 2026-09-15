@@ -45,7 +45,7 @@
             'href' => '#',
             'action' => 'booking',
             'alt' => __('Book a service'),
-            'altHref' => 'https://wa.me/94770000000?text='.rawurlencode('Hi Shutter & Sky, I would like to book a workshop service.'),
+            'altHref' => 'https://wa.me/94770000000?text='.rawurlencode('Hi Image Expo, I would like to book a workshop service.'),
             'altAction' => null,
             'img' => 'https://picsum.photos/seed/shuttersky-workshop/2000/1200',
             'filter' => 'grayscale(0.5) contrast(1.05) brightness(0.6)',
@@ -319,7 +319,7 @@
                             if (! this.name || ! this.phone) return;
 
                             const lines = [
-                                'Hello Shutter & Sky, I want to book a workshop service:',
+                                'Hello Image Expo, I want to book a workshop service:',
                                 'Name: ' + this.name,
                                 'Phone: ' + this.phone,
                                 'Gear: ' + this.gear,

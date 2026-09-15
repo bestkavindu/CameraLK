@@ -2,10 +2,8 @@
     <div class="mx-auto flex max-w-[1360px] flex-col gap-8 px-5 py-12 sm:px-8">
         <div class="flex flex-wrap justify-between gap-10">
             <div class="max-w-xs">
-                <div class="flex items-baseline gap-2.5">
-                    <span class="font-store-display text-[19px] font-bold tracking-[-0.01em] text-store-ink">
-                        SHUTTER<span class="text-store-flame">&amp;</span>SKY
-                    </span>
+                <div class="flex items-center gap-2.5">
+                    <x-store.logo class="h-11 w-auto object-contain object-left text-[19px]" />
                     <span class="text-[11px] uppercase tracking-[0.14em] text-store-faint">{{ __('Colombo') }}</span>
                 </div>
 

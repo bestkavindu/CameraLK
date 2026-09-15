@@ -41,7 +41,7 @@ function makeStoreProduct(SubCategory $subCategory, array $attributes = []): Pro
 test('the storefront home page renders the navbar and footer for guests', function () {
     $this->get(route('home'))
         ->assertOk()
-        ->assertSee('SHUTTER')
+        ->assertSee('Image Expo')
         ->assertSee('All rights reserved.', escape: false)
         ->assertSee(route('store.products'));
 });
