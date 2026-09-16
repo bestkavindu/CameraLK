@@ -158,10 +158,13 @@ return [
     | by removing them from this array. You're free to only remove some of
     | these features, or you can even remove all of these if you need to.
     |
+    | Public sign up is blocked unless REGISTRATION_ENABLED=true is set, so
+    | accounts are created by a seeder or by tinker instead.
+    |
     */
 
     'features' => [
-        Features::registration(),
+        ...(env('REGISTRATION_ENABLED', false) ? [Features::registration()] : []),
         Features::resetPasswords(),
         Features::emailVerification(),
         Features::twoFactorAuthentication([
