@@ -22,7 +22,8 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Test User',
                 'email' => 'test@example.com',
             ]);
-        }
+            $this->call(UsersTableSeeder::class);
+    }
 
         // Order matters: products reference brands and sub categories, and sub
         // categories reference their main category.
