@@ -33,8 +33,8 @@
         <div class="flex min-h-screen flex-col">
             <x-layouts::store.navbar />
 
-            {{-- 84px clears the fixed navbar: 18px of top gutter plus a 66px pill. --}}
-            <main @class(['flex-1', 'pt-[84px]' => ! $overlayNav])>
+            {{-- Clears the fixed navbar: 18px of top gutter plus the pill (70px, 78px at sm). --}}
+            <main @class(['flex-1', 'pt-[88px] sm:pt-[96px]' => ! $overlayNav])>
                 {{ $slot }}
             </main>
 

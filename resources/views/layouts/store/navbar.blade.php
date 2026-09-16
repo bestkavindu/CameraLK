@@ -56,7 +56,7 @@
     <div class="pointer-events-auto mx-auto w-full max-w-[1440px]">
         {{-- Main pill. Warm white so it reads as a lit object on the hero photograph. --}}
         <div
-            class="flex h-[66px] items-center gap-[clamp(14px,2vw,30px)] rounded-full border border-[rgba(20,24,29,0.07)] bg-[linear-gradient(100deg,#FFFFFF_0%,#FFF8F1_46%,#FFFFFF_100%)] pr-2.5 pl-3 text-store-ink transition-shadow sm:pr-3 sm:pl-3.5 duration-300"
+            class="flex h-[70px] items-center gap-[clamp(14px,2vw,30px)] rounded-full border border-[rgba(20,24,29,0.07)] bg-[linear-gradient(100deg,#FFFFFF_0%,#FFF8F1_46%,#FFFFFF_100%)] pr-2.5 pl-3 text-store-ink transition-shadow sm:h-[78px] sm:pr-3 sm:pl-3.5 duration-300"
             :class="scrolled
                 ? 'shadow-[0_22px_50px_-18px_rgba(0,0,0,0.62),inset_0_1px_0_#FFFFFF]'
                 : 'shadow-[0_18px_44px_-18px_rgba(0,0,0,0.55),inset_0_1px_0_#FFFFFF]'"
@@ -65,9 +65,9 @@
             <a
                 href="{{ route('home') }}"
                 wire:navigate
-                class="group mr-auto flex shrink-0 items-center text-store-ink no-underline"
+                class="group mr-auto flex shrink-0 items-center py-2 pr-5 pl-2.5 text-store-ink no-underline"
             >
-                <x-store.logo class="h-[36px] w-auto shrink-0 object-contain object-left text-[15px] transition-transform duration-300 group-hover:scale-[1.04] sm:h-[44px] sm:text-[17px]" />
+                <x-store.logo class="h-[42px] w-auto shrink-0 object-contain object-left text-[17px] transition-transform duration-300 group-hover:scale-[1.04] sm:h-[50px] sm:text-[20px]" />
             </a>
 
             {{-- Primary navigation --}}
@@ -102,7 +102,7 @@
                             'px-[17px] text-store-ink-soft transition-colors duration-200 hover:bg-[rgba(20,24,29,0.06)] hover:text-store-ink' => ! $gearActive,
                         ])
                     >
-                        <span>{{ __('All Gear') }}</span>
+                        <span>{{ __('Products') }}</span>
                         @if ($featured->isNotEmpty())
                             <svg
                                 width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -255,7 +255,7 @@
                                 wire:navigate
                                 class="text-[11px] font-semibold text-store-flame no-underline hover:underline"
                             >
-                                {{ __('View all gear') }} &rarr;
+                                {{ __('View Products') }} &rarr;
                             </a>
                         </div>
 
@@ -326,7 +326,7 @@
                                     wire:navigate
                                     class="col-span-2 py-2 text-center text-[13px] text-store-slate no-underline"
                                 >
-                                    {{ __('All gear available') }}
+                                    {{ __('Products available') }}
                                 </a>
                             @endforelse
                         </div>
@@ -429,7 +429,7 @@
                         'text-store-ink hover:bg-store-chalk' => ! $gearActive,
                     ])
                 >
-                    <span>{{ __('All Gear') }}</span>
+                    <span>{{ __('Products') }}</span>
                     <span @class([
                         'rounded-full px-2 py-0.5 text-[10px] font-semibold',
                         'bg-white/15 text-white' => $gearActive,
@@ -462,7 +462,7 @@
                             @click="mobileOpen = false"
                             class="col-span-2 py-2 text-center text-xs text-store-slate no-underline"
                         >
-                            {{ __('All gear available') }}
+                            {{ __('Products available') }}
                         </a>
                     @endforelse
                 </div>
