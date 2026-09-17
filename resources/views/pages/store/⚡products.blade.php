@@ -225,7 +225,7 @@ new #[Layout('layouts::store')] #[Title('Products')] class extends Component {
     }
 
     /**
-     * Collapse the grid back to one page whenever the brand filter changes.
+     * Collapse the grid back to one page whenever the brand filter changes..
      */
     public function updatedBrand(): void
     {
