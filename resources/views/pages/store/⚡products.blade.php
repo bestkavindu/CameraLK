@@ -332,7 +332,7 @@ new #[Layout('layouts::store')] #[Title('Products')] class extends Component {
                 {{ __('Shop') }} / {{ __('All gear') }}
             </div>
 
-            <h1 class="font-store-display text-[32px] font-bold leading-[1.05] tracking-[-0.02em] sm:text-[40px]">
+            <h1 class="text-[32px] font-bold leading-[1.05] tracking-[-0.02em] sm:text-[40px]">
                 {{ __('Cameras, drones & glass') }}
             </h1>
         </div>
@@ -493,7 +493,7 @@ new #[Layout('layouts::store')] #[Title('Products')] class extends Component {
         </div>
     @else
         <div class="flex flex-col items-center gap-3 rounded-[14px] border border-dashed border-store-line-strong bg-white px-6 py-[90px] text-center">
-            <div class="font-store-display text-[22px] font-bold">{{ __('No gear matched that') }}</div>
+            <div class="text-[22px] font-bold">{{ __('No gear matched that') }}</div>
 
             <p class="max-w-[340px] text-sm leading-[1.55] text-store-muted">
                 {{ __('Try a shorter search term, or reset the category and brand filters.') }}
